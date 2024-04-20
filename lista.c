@@ -1,6 +1,3 @@
-//para rodar o codigo tem que colocar no terminal antes 
-//chcp 65001
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -40,7 +37,7 @@ void adicionaArtista(ListaArtistas *lista, const Artistas *artista)
     lista->artistas = (Artistas *)realloc(lista->artistas, lista->numElem * sizeof(Artistas));
     if (lista->artistas == NULL)
     {
-        printf("Erro ao alocar memória para a lista de artistas.\n");
+        printf("---- Erro ao alocar memória para a lista de artistas ----.\n");
         exit(1);
     }
     lista->artistas[lista->numElem - 1] = *artista;
@@ -54,7 +51,7 @@ void imprimeLista(ListaArtistas *lista)
         printf("Gênero Musical: %s\n", lista->artistas[i].generoMusical);
         printf("Local de Nascimento: %s\n", lista->artistas[i].localNascimento);
         printf("Álbuns:\n%s\n", lista->artistas[i].albuns);
-        printf("------------------\n");
+        printf("==================\n");
     }
 }
 
@@ -121,7 +118,7 @@ void insereArtistaOrdenado(ListaArtistas *lista, const Artistas *artista, const 
     lista->artistas[posicaoInsercao] = *artista;
 
     // Abrindo o arquivo para escrita
-    FILE *file = fopen(arquivo, "w");
+    FILE *file = fopen("artistas.txt", "w");
     if (file == NULL)
     {
         printf("Erro ao abrir o arquivo para escrita.\n");
@@ -331,16 +328,13 @@ int main()
 {
 
     setlocale(LC_ALL, "pt_BR.UTF-8");
-    // Substitua o caminho abaixo pelo caminho desejado no seu sistema
-char arquivo[100] = "C:\\Users\\ryann\\lista avaliativa\\artistas.txt";
-
 
     printf("Texto lido do arquivo:\n");
 
     ListaArtistas lista;
     inicializaLista(&lista);
 
-    FILE *file = fopen(arquivo, "r");
+    FILE *file = fopen("artistas.txt", "r");
 
     if (file == NULL)
     {
@@ -390,7 +384,7 @@ char arquivo[100] = "C:\\Users\\ryann\\lista avaliativa\\artistas.txt";
     }
     fclose(file);
 
-    printf("Lista de Artistas:\n");
+    printf("---- Informacoes de Artistas ----\n");
 
     qsort(lista.artistas, lista.numElem, sizeof(Artistas), comparaArtistas);
 
@@ -403,10 +397,7 @@ char arquivo[100] = "C:\\Users\\ryann\\lista avaliativa\\artistas.txt";
     char novoNomeArtista[100];
     char novoGeneroMusical[200];
     char novoLocalNasc[800];
-    // Artistas attArtista;
     int posicaoBusca;
-    // int remArt;
-    // int buscaAlb;
 
     do
     {
@@ -417,7 +408,7 @@ char arquivo[100] = "C:\\Users\\ryann\\lista avaliativa\\artistas.txt";
         printf("4 - Editar artista\n");
         printf("5 - Remover artista\n");
         printf("6 - Sair\n");
-        printf("\nEscolha uma opção: ");
+        printf("\nEscolha uma das opções acima e digite um número: ");
         scanf("%d", &opcao);
 
         switch (opcao)
@@ -432,7 +423,7 @@ char arquivo[100] = "C:\\Users\\ryann\\lista avaliativa\\artistas.txt";
 
             if (posicaoBusca != -1)
             {
-                printf("\n---Artista encontrado:---\n\n");
+                printf("\n----Artista encontrado:----\n\n");
                 printf("Nome do Artista: %s\n", lista.artistas[posicaoBusca].nomeArtista);
                 printf("Gênero Musical: %s\n", lista.artistas[posicaoBusca].generoMusical);
                 printf("Local de Nascimento: %s\n", lista.artistas[posicaoBusca].localNascimento);
@@ -440,7 +431,7 @@ char arquivo[100] = "C:\\Users\\ryann\\lista avaliativa\\artistas.txt";
             }
             else
             {
-                printf("---Artista não encontrado.---\n");
+                printf("----Artista não encontrado.----\n");
             }
             break;
 
@@ -501,220 +492,90 @@ char arquivo[100] = "C:\\Users\\ryann\\lista avaliativa\\artistas.txt";
                 strcat(artista.albuns, "\n");
             }
 
-            insereArtistaOrdenado(&lista, &artista, arquivo);
-            imprimeLista(&lista);
-
-            // Abre o arquivo original para escrita
-            file = fopen(arquivo, "a");
-
-            if (file == NULL)
-            {
-                printf("---Erro na abertura do arquivo!!!---\n");
-                exit(1);
-            }
-
-            // Escreve o novo artista no arquivo
-            fprintf(file, "%s\n%s\n%s\n%s\n==========\n",
-                    artista.nomeArtista, artista.generoMusical, artista.localNascimento, artista.albuns);
-
-            fclose(file);
+            insereArtistaOrdenado(&lista, &artista, "artistas.txt");
 
             break;
 
         case 4:
-            printf("Digite o nome do artista a ser editado: ");
-            scanf(" %[^\n]s", buscaNome);
+            printf("Digite o nome do artista que deseja editar: ");
+            getchar();
+            fgets(buscaNome, sizeof(buscaNome), stdin);
+            buscaNome[strcspn(buscaNome, "\n")] = '\0';
 
-            // Busca o artista
-            resultadoBusca = buscaBinariaPorNome(&lista, buscaNome);
+            posicaoBusca = buscaBinariaPorNome(&lista, buscaNome);
 
-            if (resultadoBusca != -1)
+            if (posicaoBusca != -1)
             {
-                printf("Artista encontrado:\n");
-                printf("Nome do Artista: %s\n", lista.artistas[resultadoBusca].nomeArtista);
-                printf("Gênero Musical: %s\n", lista.artistas[resultadoBusca].generoMusical);
-                printf("Local de Nascimento: %s\n", lista.artistas[resultadoBusca].localNascimento);
-                printf("Álbuns:\n%s\n", lista.artistas[resultadoBusca].albuns);
-                printf("------------------\n");
+                printf("\n---Artista encontrado:---\n\n");
+                printf("Nome do Artista: %s\n", lista.artistas[posicaoBusca].nomeArtista);
+                printf("Gênero Musical: %s\n", lista.artistas[posicaoBusca].generoMusical);
+                printf("Local de Nascimento: %s\n", lista.artistas[posicaoBusca].localNascimento);
+                printf("Álbuns:\n%s\n", lista.artistas[posicaoBusca].albuns);
 
-                printf("Digite o novo nome do artista: ");
-                scanf(" %[^\n]s", novoNomeArtista);
-                printf("Digite o novo gênero musical do artista: ");
-                scanf(" %[^\n]s", novoGeneroMusical);
-                printf("Digite o novo local de nascimento do artista: ");
-                scanf(" %[^\n]s", novoLocalNasc);
+                printf("\nDigite o novo nome do artista: ");
+                fgets(novoNomeArtista, sizeof(novoNomeArtista), stdin);
+                novoNomeArtista[strcspn(novoNomeArtista, "\n")] = '\0';
 
-                printf("Digite os novos álbuns do artista (separados por linha, digite 'FIM' para encerrar):\n");
-                artista.albuns[0] = '\0';
+                printf("Digite o novo gênero musical: ");
+                fgets(novoGeneroMusical, sizeof(novoGeneroMusical), stdin);
+                novoGeneroMusical[strcspn(novoGeneroMusical, "\n")] = '\0';
 
-                while (1)
-                {
-                    scanf(" %[^\n]s", album);
-                    if (strcmp(album, "FIM") == 0)
-                    {
-                        system("cls");
-                        printf("Artista editado com sucesso!");
-                        sleep(1);
-                        system("cls");
-                        imprimeLista(&lista);
-                        break;
-                    }
-                    strcat(artista.albuns, album);
-                    strcat(artista.albuns, "\n");
-                }
+                printf("Digite o novo local de nascimento: ");
+                fgets(novoLocalNasc, sizeof(novoLocalNasc), stdin);
+                novoLocalNasc[strcspn(novoLocalNasc, "\n")] = '\0';
 
-                if (strlen(novoNomeArtista) > 0)
-                {
-                    strcpy(artista.nomeArtista, novoNomeArtista);
-                }
-                if (strlen(novoGeneroMusical) > 0)
-                {
-                    strcpy(artista.generoMusical, novoGeneroMusical);
-                }
-                if (strlen(novoLocalNasc) > 0)
-                {
-                    strcpy(artista.localNascimento, novoLocalNasc);
-                }
+                strcpy(artista.nomeArtista, novoNomeArtista);
+                strcpy(artista.generoMusical, novoGeneroMusical);
+                strcpy(artista.localNascimento, novoLocalNasc);
 
-                // Edita o artista na lista em memória
-                editaArtista(&lista, resultadoBusca, &artista);
-
-                // Atualiza o arquivo "artistas.txt" com os dados atualizados
-                file = fopen(arquivo, "w");
-                if (file == NULL)
-                {
-                    printf("Erro ao abrir o arquivo para edição do artista.\n");
-                    exit(1);
-                }
-
-                for (int i = 0; i < lista.numElem; i++)
-                {
-                    fprintf(file, "%s\n%s\n%s\n%s\n==========\n",
-                            lista.artistas[i].nomeArtista, lista.artistas[i].generoMusical,
-                            lista.artistas[i].localNascimento, lista.artistas[i].albuns);
-                }
-
-                fclose(file);
+                editaArtista(&lista, posicaoBusca, &artista);
 
                 system("cls");
-
-                printf("Artista editado com sucesso!\n");
-                printf("Lista de Artistas Atualizada:\n");
-                imprimeLista(&lista);
+                printf("Artista editado com sucesso!");
+                sleep(2);
+                system("cls");
             }
             else
             {
-                printf("Artista não encontrado.\n");
+                printf("---Artista não encontrado.---\n");
             }
             break;
 
         case 5:
-    printf("\nDigite o nome do artista a ser removido: ");
-    getchar();
-    fgets(buscaNome, sizeof(buscaNome), stdin);
-    buscaNome[strcspn(buscaNome, "\n")] = '\0';
+            printf("Digite o nome do artista que deseja remover: ");
+            getchar();
+            fgets(buscaNome, sizeof(buscaNome), stdin);
+            buscaNome[strcspn(buscaNome, "\n")] = '\0';
 
-    posicaoBusca = buscaBinariaPorNome(&lista, buscaNome);
+            posicaoBusca = buscaBinariaPorNome(&lista, buscaNome);
 
-    if (posicaoBusca != -1)
-    {
-        // Remove o artista da lista em memória
-        removeArtista(&lista, posicaoBusca);
-
-        // Cria um arquivo temporário para armazenar os dados atualizados
-        FILE *tempFile = fopen("temp.txt", "w");
-        if (tempFile == NULL)
-        {
-            perror("Erro ao criar o arquivo temporário");
-            exit(1);
-        }
-
-        // Abre o arquivo original para leitura
-        FILE *file = fopen(arquivo, "r");
-        if (file == NULL)
-        {
-            perror("Erro ao abrir o arquivo original para leitura");
-            fclose(tempFile);
-            exit(1);
-        }
-
-        int linha = 0;
-        char textoLinha[MAX_LINHA];
-        Artistas artista;
-
-        // Percorre o arquivo original e copia todos os artistas, exceto o que está sendo removido
-        while (fgets(textoLinha, MAX_LINHA, file))
-        {
-            textoLinha[strcspn(textoLinha, "\n")] = '\0';
-
-            if (strcmp(textoLinha, "==========") == 0)
+            if (posicaoBusca != -1)
             {
-                if (linha >= 4)
-                {
-                    if (linha / 4 != posicaoBusca)
-                    {
-                        fprintf(tempFile, "%s\n%s\n%s\n%s\n==========\n",
-                                artista.nomeArtista, artista.generoMusical,
-                                artista.localNascimento, artista.albuns);
-                    }
-                }
-                linha = 0;
+                printf("\n---Artista encontrado:---\n\n");
+                printf("Nome do Artista: %s\n", lista.artistas[posicaoBusca].nomeArtista);
+                printf("Gênero Musical: %s\n", lista.artistas[posicaoBusca].generoMusical);
+                printf("Local de Nascimento: %s\n", lista.artistas[posicaoBusca].localNascimento);
+                printf("Álbuns:\n%s\n", lista.artistas[posicaoBusca].albuns);
+
+                removeArtista(&lista, posicaoBusca);
+
+                system("cls");
+                printf("Artista removido com sucesso!");
+                sleep(2);
+                system("cls");
             }
             else
             {
-                switch (linha)
-                {
-                case 0:
-                    strcpy(artista.nomeArtista, textoLinha);
-                    break;
-                case 1:
-                    strcpy(artista.generoMusical, textoLinha);
-                    break;
-                case 2:
-                    strcpy(artista.localNascimento, textoLinha);
-                    break;
-                case 3:
-                    strcpy(artista.albuns, textoLinha);
-                    break;
-                }
-                linha++;
+                printf("---Artista não encontrado.---\n");
             }
-        }
-
-        // Fecha ambos os arquivos
-        fclose(file);
-        fclose(tempFile);
-
-        // Substitue o arquivo original pelo arquivo temporário
-        if (remove(arquivo) != 0)
-        {
-            perror("Erro ao remover o arquivo original");
-            exit(1);
-        }
-        if (rename("temp.txt", arquivo) != 0)
-        {
-            perror("Erro ao renomear o arquivo temporário");
-            exit(1);
-        }
-
-        system("cls");
-        printf("\n---Artista removido com sucesso!---\n");
-        sleep(2);
-        system("cls");
-        imprimeLista(&lista);
-    }
-    else
-    {
-        printf("\n---Artista não encontrado.---\n");
-    }
-    break;
+            break;
 
         case 6:
-            printf("Saindo...\n");
+            printf("Encerrando o programa...\n");
             break;
 
         default:
-            printf("---Opção inválida. Tente novamente.---\n");
+            printf("Opção inválida.\n");
             break;
         }
     } while (opcao != 6);
