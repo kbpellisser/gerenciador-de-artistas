@@ -1,11 +1,13 @@
+//Antes de compilar o programa, execute no terminal o comando ---> chcp 65001
+//Se o compilador Visual Studio Code não startar o menu, compile no Replit ---> (https://replit.com/)
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <locale.h>
-
-
 #define MAX_LINHA 500
+
 
 typedef struct Artista
 {
@@ -76,7 +78,7 @@ int buscaBinariaPorNome(ListaArtistas *lista, char *nome)
 
         if (cmp == 0)
         {
-            return meio; // Quando o Artista for encontrado
+            return meio; // Retornará quando o artista for encontrado
         }
         else if (cmp < 0)
         {
@@ -88,7 +90,7 @@ int buscaBinariaPorNome(ListaArtistas *lista, char *nome)
         }
     }
 
-    return -1; // Quando o Artista não for encontrado
+    return -1; // Retornará quando o artista não for encontrado
 }
 
 void inserirArtistaOrdenado(ListaArtistas *lista, const Artista *artista, const char *arquivo)
@@ -311,6 +313,7 @@ int buscaSequencialPorAlbum(ListaArtistas *lista, char *album)
 
 int main()
 {
+
     printf("Conteúdo do Arquivo:\n");
 
     ListaArtistas lista;
