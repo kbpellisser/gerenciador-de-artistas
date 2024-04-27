@@ -9,20 +9,15 @@ Este projeto consiste em um sistema de gerenciamento de informações de artista
 - [@kbpellisser](https://github.com/kbpellisser)
 
 
-## Variáveis de Ambiente
-
-Para rodar esse projeto, você vai precisar adicionar a seguinte variável de ambiente no seu .env
-
-`chcp 65001`
-
-
 
 ## Funcionalidades
 
-- Preview em tempo real
-- Modo tela cheia
-- Multiplataforma
-
+- Preview em tempo real;
+- Modo tela cheia;
+- Multiplataforma;
+- Alteração em tempo real;
+- Aplicação descomplicada;
+- Inclusão de novos artistas;
 
 ## 🚀 Sobre mim
 Sou um estudante universitário atualmente no 3º período de um curso de graduação, em um total de 8 períodos. Estou comprometido com minha jornada acadêmica, buscando constantemente expandir meus conhecimentos e habilidades.
