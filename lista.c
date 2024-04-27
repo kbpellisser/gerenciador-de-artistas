@@ -1,13 +1,16 @@
-//Antes de compilar o programa, execute no terminal o comando ---> chcp 65001
-//Se o compilador Visual Studio Code não startar o menu, compile no Replit ---> (https://replit.com/)
+//Antes de compilar o programa, execute no terminal o comando ---> chcp 65001 ("chcp 65001" serve para definir a página de código UTF-8 Isso é necessário para que caracteres especiais, como acentos, sejam exibidos corretamente no console do Windows, caso a biblioteca locale.h não esteja sendo incluído corretamente.)
+//Se o terminal Visual Studio Code compilar o código inteiro ---> abra o (https://replit.com/), crie um ambiente main.c , um arquivo chamado artistas.txt e dê start.
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <locale.h>
+
+// Define o máximo de uma linha do arquivo
 #define MAX_LINHA 500
 
+// Definição da estrutura = Artista
 
 typedef struct Artista
 {
@@ -18,24 +21,32 @@ typedef struct Artista
 
 } Artista;
 
+// Definição da estrutura = ListaArtistas
+
 typedef struct ListaArtistas
 {
     Artista *artistas;
     int numElementos;
 } ListaArtistas;
 
-int compararArtistas(const void *a, const void *b)
+// Função de comparação para ordenar = artistas por nome
+
+int comparar_Artistas(const void *a, const void *b)
 {
     return strcmp(((Artista *)a)->nome, ((Artista *)b)->nome);
 }
 
-void inicializarLista(ListaArtistas *lista)
+// Função para inicializar = lista de artistas
+
+void inicializar_Lista(ListaArtistas *lista)
 {
     lista->artistas = NULL;
     lista->numElementos = 0;
 }
 
-void adicionarArtista(ListaArtistas *lista, const Artista *artista)
+// Função para adicionar = artista à lista
+
+void adicionar_Artista(ListaArtistas *lista, const Artista *artista)
 {
     lista->numElementos++;
     lista->artistas = (Artista *)realloc(lista->artistas, lista->numElementos * sizeof(Artista));
@@ -47,7 +58,9 @@ void adicionarArtista(ListaArtistas *lista, const Artista *artista)
     lista->artistas[lista->numElementos - 1] = *artista;
 }
 
-void imprimirLista(ListaArtistas *lista)
+// Função para imprimir todos contidos na lista
+
+void imprimir_Lista(ListaArtistas *lista)
 {
     for (int i = 0; i < lista->numElementos; i++)
     {
@@ -59,14 +72,16 @@ void imprimirLista(ListaArtistas *lista)
     }
 }
 
-void liberarLista(ListaArtistas *lista)
+// Função para liberar a memória ocupada pela lista de artistas
+void Liberar_Lista(ListaArtistas *lista)
 {
     free(lista->artistas);
     lista->artistas = NULL;
     lista->numElementos = 0;
 }
 
-int buscaBinariaPorNome(ListaArtistas *lista, char *nome)
+// Função de busca binária por nome de artista
+int busca_Binaria_PorNome(ListaArtistas *lista, char *nome)
 {
     int esquerda = 0;
     int direita = lista->numElementos - 1;
@@ -93,7 +108,8 @@ int buscaBinariaPorNome(ListaArtistas *lista, char *nome)
     return -1; // Retornará quando o artista não for encontrado
 }
 
-void inserirArtistaOrdenado(ListaArtistas *lista, const Artista *artista, const char *arquivo)
+// Função para inserir um artista de forma ordenada na lista e atualizar o arquivo
+void inserir_Artista_Ordenado(ListaArtistas *lista, const Artista *artista, const char *arquivo)
 {
     int posicaoInsercao = 0;
 
@@ -119,8 +135,8 @@ void inserirArtistaOrdenado(ListaArtistas *lista, const Artista *artista, const 
 
     lista->artistas[posicaoInsercao] = *artista;
 
-    FILE *ponteiroArquivo = fopen(arquivo, "w");
-    if (ponteiroArquivo == NULL)
+    FILE *albumArquivo = fopen(arquivo, "w");
+    if (albumArquivo == NULL)
     {
         printf("Erro ao abrir arquivo para escrita.\n");
         exit(1);
@@ -128,15 +144,15 @@ void inserirArtistaOrdenado(ListaArtistas *lista, const Artista *artista, const 
 
     for (int i = 0; i < lista->numElementos; i++)
     {
-        fprintf(ponteiroArquivo, "%s\n%s\n%s\n%s\n==========\n",
+        fprintf(albumArquivo, "%s\n%s\n%s\n%s\n==========\n",
                 lista->artistas[i].nome, lista->artistas[i].generoMusical,
                 lista->artistas[i].localNascimento, lista->artistas[i].albuns);
     }
 
-    fclose(ponteiroArquivo);
+    fclose(albumArquivo);
 }
 
-void removerArtista(ListaArtistas *lista, int posicao)
+void remover_Artista(ListaArtistas *lista, int posicao)
 {
     if (posicao < 0 || posicao >= lista->numElementos)
     {
@@ -220,7 +236,7 @@ void removerArtista(ListaArtistas *lista, int posicao)
     }
 }
 
-void editarArtista(ListaArtistas *lista, int posicao, const Artista *novoArtista)
+void editar_Artista(ListaArtistas *lista, int posicao, const Artista *novoArtista)
 {
     if (posicao < 0 || posicao >= lista->numElementos)
     {
@@ -299,7 +315,7 @@ void editarArtista(ListaArtistas *lista, int posicao, const Artista *novoArtista
     lista->artistas[posicao] = *novoArtista;
 }
 
-int buscaSequencialPorAlbum(ListaArtistas *lista, char *album)
+int busca_Sequencial_PorAlbum(ListaArtistas *lista, char *album)
 {
     for (int i = 0; i < lista->numElementos; i++)
     {
@@ -314,10 +330,10 @@ int buscaSequencialPorAlbum(ListaArtistas *lista, char *album)
 int main()
 {
 
-    printf("Conteúdo do Arquivo:\n");
+    printf("Álbuns Artisticos: \n");
 
     ListaArtistas lista;
-    inicializarLista(&lista);
+    inicializar_Lista(&lista);
 
     FILE *arquivo = fopen("artistas.txt", "r");
 
@@ -339,7 +355,7 @@ int main()
         {
             if (linha >= 4)
             {
-                adicionarArtista(&lista, &artista);
+                adicionar_Artista(&lista, &artista);
             }
             linha = 0;
         }
@@ -371,9 +387,9 @@ int main()
 
     printf("---- Informações dos Artistas ----\n");
 
-    qsort(lista.artistas, lista.numElementos, sizeof(Artista), compararArtistas);
+    qsort(lista.artistas, lista.numElementos, sizeof(Artista), comparar_Artistas);
 
-    imprimirLista(&lista);
+    imprimir_Lista(&lista);
 
     int opcao;
     char nomeBusca[100];
@@ -399,12 +415,12 @@ int main()
         switch (opcao)
         {
         case 1:
-            printf("\n\nDigite o nome do artista a ser buscado: ");
+            printf("\n\nDigite o nome do artista que você deseja encontrar: ");
             getchar();
             fgets(nomeBusca, sizeof(nomeBusca), stdin);
             nomeBusca[strcspn(nomeBusca, "\n")] = '\0';
 
-            posicaoBusca = buscaBinariaPorNome(&lista, nomeBusca);
+            posicaoBusca = busca_Binaria_PorNome(&lista, nomeBusca);
 
             if (posicaoBusca != -1)
             {
@@ -421,22 +437,22 @@ int main()
             break;
 
         case 2:
-            printf("\n\nDigite o nome do álbum a ser buscado: ");
+            printf("\n\nDigite o nome do álbum que você deseja encontrar: ");
             getchar();
             fgets(albumBusca, sizeof(albumBusca), stdin);
             albumBusca[strcspn(albumBusca, "\n")] = '\0';
 
-            resultadoBusca = buscaSequencialPorAlbum(&lista, albumBusca);
+            resultadoBusca = busca_Sequencial_PorAlbum(&lista, albumBusca);
 
             if (resultadoBusca != -1)
             {
-                printf("\nÁlbum encontrado no artista:\n");
+                printf("\nÁlbum encontrado no artista: \n");
                 printf("Nome: %s\n", lista.artistas[resultadoBusca].nome);
                 printf("Álbuns:\n%s\n", lista.artistas[resultadoBusca].albuns);
             }
             else
             {
-                printf("\nÁlbum não encontrado em nenhum artista.\n");
+                printf("\nÁlbum não encontrado em nenhum artista. \n");
             }
             break;
 
@@ -458,7 +474,7 @@ int main()
             fgets(artista.albuns, sizeof(artista.albuns), stdin);
             artista.albuns[strcspn(artista.albuns, "\n")] = '\0';
 
-            inserirArtistaOrdenado(&lista, &artista, "artistas.txt");
+            inserir_Artista_Ordenado(&lista, &artista, "artistas.txt");
             printf("\nArtista adicionado com sucesso!\n");
             break;
 
@@ -468,7 +484,7 @@ int main()
             fgets(nomeBusca, sizeof(nomeBusca), stdin);
             nomeBusca[strcspn(nomeBusca, "\n")] = '\0';
 
-            posicaoBusca = buscaBinariaPorNome(&lista, nomeBusca);
+            posicaoBusca = busca_Binaria_PorNome(&lista, nomeBusca);
 
             if (posicaoBusca != -1)
             {
@@ -488,12 +504,12 @@ int main()
                 strcpy(artista.generoMusical, novoGeneroMusical);
                 strcpy(artista.localNascimento, novoLocalNascimento);
 
-                editarArtista(&lista, posicaoBusca, &artista);
+                editar_Artista(&lista, posicaoBusca, &artista);
                 printf("\nArtista editado com sucesso!\n");
             }
             else
             {
-                printf("\nArtista não encontrado para edição.\n");
+                printf("\nArtista não encontrado para ser editado.\n");
             }
             break;
 
@@ -503,11 +519,11 @@ int main()
             fgets(nomeBusca, sizeof(nomeBusca), stdin);
             nomeBusca[strcspn(nomeBusca, "\n")] = '\0';
 
-            posicaoBusca = buscaBinariaPorNome(&lista, nomeBusca);
+            posicaoBusca = busca_Binaria_PorNome(&lista, nomeBusca);
 
             if (posicaoBusca != -1)
             {
-                removerArtista(&lista, posicaoBusca);
+                remover_Artista(&lista, posicaoBusca);
                 printf("\nArtista removido com sucesso!\n");
             }
             else
@@ -527,7 +543,7 @@ int main()
 
     } while (opcao != 6);
 
-    liberarLista(&lista);
+    Liberar_Lista(&lista);
 
     return 0;
 }
