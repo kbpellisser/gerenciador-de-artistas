@@ -1,11 +1,11 @@
 //Antes de compilar o programa, execute no terminal o comando ---> chcp 65001 ("chcp 65001" serve para definir a página de código UTF-8 Isso é necessário para que caracteres especiais, como acentos, sejam exibidos corretamente no console do Windows, caso a biblioteca locale.h não esteja sendo incluído corretamente.)
 //Se o terminal Visual Studio Code compilar o código inteiro ---> abra o (https://replit.com/), crie um ambiente main.c , um arquivo chamado artistas.txt e dê start.
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <locale.h>
+#include <stdio.h> //Biblioteca padrão de entrada e saída
+#include <string.h>  //Biblioteca para manipulação de strings, também conhecidos como array de chars
+#include <stdlib.h> //Biblioteca onde estão localizadas as funções referentes às operações nas quais os mecanismos operam em função da entrada e da saída padrão, bem como em arquivos também.
+#include <unistd.h> //Biblioteca padrão em sistemas operacionais Unix e Unix-like, como Linux e macOS. Ela fornece acesso a uma série de funções de sistema relacionadas à interação com o sistema operacional.
+#include <locale.h> //Biblioteca que define a localidade para o padrão, que é a página de código ANSI padrão do usuário obtida do sistema operacional.
 
 // Define o máximo de uma linha do arquivo
 #define MAX_LINHA 500
